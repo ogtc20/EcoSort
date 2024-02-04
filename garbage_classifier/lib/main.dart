@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -122,21 +121,75 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 }
 
-// A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-  final String url = "http://192.168.0.16:5000/api";
+class DisplayPictureScreen extends StatefulWidget {
+  const DisplayPictureScreen({
+    super.key,
+    required this.imagePath
+  });
 
-  const DisplayPictureScreen({super.key, required this.imagePath});
+  final String imagePath;
+
+  @override
+  DisplayPictureScreenState createState() => DisplayPictureScreenState();
+}
+
+// A widget that displays the picture taken by the user.
+class DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  
+  final String url = "http://192.168.0.16:5000/api";
 
   @override
   Widget build(BuildContext context) {
-    SendImage(url, imagePath);
+    // SendImage(url, widget.imagePath);
     return Scaffold(
       appBar: AppBar(title: const Text('Display the Picture')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+      body: Column(
+        children: <Widget>[
+          Image.file(File(widget.imagePath)),
+          FutureBuilder<String>(
+            future: SendImage(url, widget.imagePath),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+              List<Widget> children;
+              if (snapshot.hasData){
+                children = [Text('Result: ${snapshot.data}')];
+              }
+              else if (snapshot.hasError){
+                children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              ),
+            ];
+              }
+            else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Awaiting result...'),
+              ),
+            ];
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
+            ),
+          );
+            })
+        ]
+      )
     );
   }
 }

@@ -8,7 +8,7 @@ Future Getdata(url) async {
     return Response.body;
 }
 
-Future SendImage(url, image) async {
+Future<String> SendImage(url, image) async {
 //code for sending image was mostly ripped from here: https://github.com/Ssuwani/transmit_image_flutter_to_flask/blob/master/lib/main.dart
   String base64Encoded = base64Encode(File(image).readAsBytesSync());
 
@@ -21,5 +21,5 @@ Future SendImage(url, image) async {
     ),
     headers: {'Content-Type': "application/json"},
   );
-  print(response.body);
+  return response.body;
 }
