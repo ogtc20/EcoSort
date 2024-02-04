@@ -136,7 +136,7 @@ class DisplayPictureScreen extends StatefulWidget {
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   
-  final String url = "http://192.168.0.16:5000/api";
+  final String url = "http://192.168.1.136:5000/api";
 
   @override
   Widget build(BuildContext context) {
