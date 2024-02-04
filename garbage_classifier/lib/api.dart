@@ -21,4 +21,5 @@ Future SendImage(url, image) async {
     ),
     headers: {'Content-Type': "application/json"},
   );
+  print(response.body);
 }

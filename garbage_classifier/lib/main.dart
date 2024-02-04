@@ -24,65 +24,9 @@ Future<void> main() async {
         // Pass the appropriate camera to the TakePictureScreen widget.
         camera: firstCamera,
       ),
-      // home: ServerTest()
     ),
   );
 }
-
-
-// class ServerTest extends StatefulWidget {
-//   const ServerTest({
-//     super.key,
-//   });
-//   @override
-//   ServerTestState createState() => ServerTestState();
-// }
-
-// class ServerTestState extends State<ServerTest> {
-//   var url = Uri.parse("http://192.168.0.16:5000/api?Query=");
-//   var Data;
-//   String QuereyText = "Query";
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Take a picture')),
-//       // You must wait until the controller is initialized before displaying the
-//       // camera preview. Use a FutureBuilder to display a loading spinner until the
-//       // controller has finished initializing.
-//       body: Column(
-//         children: <Widget>[
-//           Padding(
-//             padding: const EdgeInsets.all(10.0),
-//             child: TextField(
-//               onChanged: (value){
-//                 url = Uri.parse("http://192.168.0.16:5000/api?Query=" + value.toString());
-//               }
-//             ),
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.all(10.0),
-//             child: Text(
-//               QuereyText
-//             ),
-//           ),
-//         ]
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         // Provide an onPressed callback.
-//         onPressed: () async {
-//           Data = await Getdata(url);
-//           var DecodedData = jsonDecode(Data);
-//           setState((){
-//             QuereyText = DecodedData['Query'];
-//           });
-//         },
-//         child: const Icon(Icons.camera_alt),
-//       ),
-//     );
-//   }
-// }
-
-
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({

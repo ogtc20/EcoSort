@@ -1,6 +1,9 @@
 from flask import Flask, request
-
+import os
+from azure.cognitiveservices.vision.customvision.prediction import CustomVisionPredictionClient
+from msrest.authentication import ApiKeyCredentials
 import base64
+
 app = Flask(__name__)
 
 @app.route('/api', methods=['POST'])
@@ -8,14 +11,6 @@ def hello_world():
     data = request.get_json(force=True)
     image_data = data['image']
     imgdata = base64.b64decode(image_data)
-    
-    # for show
-    # from PIL import Image
-    # import io
-    # image = Image.open(io.BytesIO(imgdata))
-    # image.show()
-    
-    # save image
     filename = 'cam_image.jpg'
     with open(filename, 'wb') as f:
         f.write(imgdata)
