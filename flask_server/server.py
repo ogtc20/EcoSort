@@ -6,15 +6,19 @@ import base64
 
 app = Flask(__name__)
 
+# Function to return the image classification using the image 
 def azure_classify(image_data):
+    # Variables required to utlized the Custom Vision API
     prediction_endpoint = os.getenv('PredictionEndpoint')
     prediction_key = os.getenv('PredictionKey')
     project_id = os.getenv('ProjectID')
     model_name = os.getenv('ModelName')
 
+    # Create a prediction instance using the classification model
     prediction_credentials = ApiKeyCredentials(in_headers={"Prediction-key": prediction_key})
     prediction_client = CustomVisionPredictionClient(endpoint=prediction_endpoint, credentials=prediction_credentials)
 
+    # Store the classification results
     results = prediction_client.classify_image(project_id, model_name, image_data)
     
     toReturn = ""
