@@ -1,28 +1,24 @@
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 Future Getdata(url) async {
-    http.Response response = await http.get(url);
-    print(response);
-    return response.body;
+    http.Response Response = await http.get(url);
+    print(Response);
+    return Response.body;
 }
 
-Future SendImage(url, selectedImage) async {
-  var request = http.MultipartRequest(
-    'POST',
+Future SendImage(url, image) async {
+//code for sending image was mostly ripped from here: https://github.com/Ssuwani/transmit_image_flutter_to_flask/blob/master/lib/main.dart
+  String base64Encoded = base64Encode(File(image).readAsBytesSync());
+
+  final response = await http.post(
     Uri.parse(url),
-  );
-  Map<String, String> headers = {"Content-type": "multipart/form-data"};
-  request.files.add(
-    http.MultipartFile(
-      'image',
-      selectedImage.readAsBytes().asStream(),
-      selectedImage.lengthSync(),
-      filename: selectedImage.path.split('/').last,
+    body: jsonEncode(
+      {
+        'image': base64Encoded,
+      },
     ),
+    headers: {'Content-Type': "application/json"},
   );
-  request.headers.addAll(headers);
-  print("request: " + request.toString());
-  var res = await request.send();
-  http.Response response = await http.Response.fromStream(res);
-  return response.body;
 }

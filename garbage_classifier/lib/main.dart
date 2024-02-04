@@ -181,13 +181,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
-  final String url = "http://192.168.1.136:5000/api";
+  final String url = "http://192.168.0.16:5000/api";
 
   const DisplayPictureScreen({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
-    SendImage(url, Image.file(File(imagePath)));
+    SendImage(url, imagePath);
     return Scaffold(
       appBar: AppBar(title: const Text('Display the Picture')),
       // The image is stored as a file on the device. Use the `Image.file`

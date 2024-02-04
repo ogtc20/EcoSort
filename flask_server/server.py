@@ -1,18 +1,26 @@
-from flask import Flask, request, jsonify
-import werkzeug
+from flask import Flask, request
+
+import base64
 app = Flask(__name__)
 
-@app.route('/api', methods=["POST"])
-def upload():
-    if request.method == "POST" :
-        imagefile = request.files['image']
-        filename = werkzeug.utils.secure_filename(imagefile.filename)
-        print("\nReceived image File name : " + imagefile.filename)
-        imagefile.save("./uploadedimages/" + filename)
-        
-        return jsonify({
-            "message": "Image Uploaded Successfully ",
-        })
+@app.route('/api', methods=['POST'])
+def hello_world():
+    data = request.get_json(force=True)
+    image_data = data['image']
+    imgdata = base64.b64decode(image_data)
+    
+    # for show
+    # from PIL import Image
+    # import io
+    # image = Image.open(io.BytesIO(imgdata))
+    # image.show()
+    
+    # save image
+    filename = 'cam_image.jpg'
+    with open(filename, 'wb') as f:
+        f.write(imgdata)
 
-if __name__ == "__main__":
-    app.run(debug=True, port=9000)
+    return 'Receive Successfully and Saved image'
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)
