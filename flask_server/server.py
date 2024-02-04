@@ -6,6 +6,7 @@ app = Flask(__name__)
 def hello_world():
     d={}
     d['Query'] = str(request.args['Query'])
+    print(d)
     return jsonify(d)
 
 if __name__ == '__main__':

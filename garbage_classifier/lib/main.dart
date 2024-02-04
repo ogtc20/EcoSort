@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'api.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -22,47 +24,24 @@ Future<void> main() async {
       //   // Pass the appropriate camera to the TakePictureScreen widget.
       //   camera: firstCamera,
       // ),
-      home:
+      home: ServerTest()
     ),
   );
 }
 
 
 class ServerTest extends StatefulWidget {
-  const TakePictureScreen({
+  const ServerTest({
     super.key,
   });
   @override
-  ServerTestState createState() => TakePictureScreenState();
+  ServerTestState createState() => ServerTestState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
-
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
-  }
-
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
-    super.dispose();
-  }
-
+class ServerTestState extends State<ServerTest> {
+  var url = Uri.parse("http://127.0.0.1:5000/api?Query=");
+  var Data;
+  String QuereyText = "Query";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,21 +49,32 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextField(
+              onChanged: (value){
+                url = Uri.parse("http://127.0.0.1:5000/api?Query=" + value.toString());
+              }
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              QuereyText
+            ),
+          ),
+        ]
       ),
       floatingActionButton: FloatingActionButton(
         // Provide an onPressed callback.
         onPressed: () async {
+          Data = await Getdata(url);
+          var DecodedData = jsonDecode(Data);
+          setState((){
+            QuereyText = DecodedData['Query'];
+          });
         },
         child: const Icon(Icons.camera_alt),
       ),
