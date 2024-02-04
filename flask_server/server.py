@@ -1,13 +1,18 @@
 from flask import Flask, request, jsonify
-
+import werkzeug
 app = Flask(__name__)
 
-@app.route('/api',methods=['GET'])
-def hello_world():
-    d={}
-    d['Query'] = str(request.args['Query'])
-    print(d)
-    return jsonify(d)
+@app.route('/api', methods=["POST"])
+def upload():
+    if request.method == "POST" :
+        imagefile = request.files['image']
+        filename = werkzeug.utils.secure_filename(imagefile.filename)
+        print("\nReceived image File name : " + imagefile.filename)
+        imagefile.save("./uploadedimages/" + filename)
+        
+        return jsonify({
+            "message": "Image Uploaded Successfully ",
+        })
 
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    app.run(debug=True, port=9000)
