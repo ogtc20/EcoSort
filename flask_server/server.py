@@ -21,10 +21,22 @@ def azure_classify(image_data):
     # Loop over each label prediction and print any with probability > 50%
     for prediction in results.predictions:
         if prediction.probability > 0.5:
-            toReturn += ('{} ({:.0%})'.format(prediction.tag_name, prediction.probability))
-            toReturn += '\n'
+            classification, confidence = prediction.tag_name, prediction.probability
+            print(classification, confidence)
+            if ((classification == "Plastic") or (classification == "Paper") or (classification == "Cardboard") or (classification == "Battery") or (classification == "Glass") or (classification == "Metal")):
+                toReturn = classification + ", Recycle (" + '{:.0%}'.format(confidence) +" confident)"
+            elif (classification == "Biological"):
+                toReturn = classification + ", Organic Waste (" + '{:.0%}'.format(confidence) +" confident)"
+            else:
+                toReturn = classification + ", Garbage (" + '{:.0%}'.format(confidence) +" confident)"
+            # toReturn += ('{} ({:.0%})'.format(prediction.tag_name, prediction.probability))
+            # toReturn += '\n'
     return toReturn
+#battery, biological, cardboard, clothes, glass, metal, paper, plastic, shoes, trash
 
+#organic: biological
+#recycle: paper, cardboard, battery, glass, metal,
+#garbage: shoes, clothes, trash,
 
 @app.route('/api', methods=['POST'])
 def hello_world():
@@ -35,6 +47,7 @@ def hello_world():
     with open(filename, 'wb') as f:
         f.write(imgdata)
     toReturn = azure_classify(imgdata)
+    
     return toReturn #the text that gets sent back to the phone
 
 if __name__ == '__main__':

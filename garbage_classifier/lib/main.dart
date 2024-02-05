@@ -136,7 +136,7 @@ class DisplayPictureScreen extends StatefulWidget {
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   
-  final String url = "http://192.168.1.136:5000/api";
+  final String url = "http://10.160.31.217:5000/api";
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +153,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             builder: (BuildContext context, AsyncSnapshot<String> snapshot){
               List<Widget> children;
               if (snapshot.hasData){
-                children = [Text('Result: ${snapshot.data}')];
+                children = [Text(
+                  '${snapshot.data}',
+                  style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0)
+                  )];
               }
               else if (snapshot.hasError){
                 children = <Widget>[
